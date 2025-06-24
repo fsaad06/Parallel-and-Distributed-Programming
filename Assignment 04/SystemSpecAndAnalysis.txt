@@ -1,0 +1,45 @@
+This project implements a 2D Laplace equation solver using CUDA and OpenCL, with serial CPU and OpenMP versions for comparison. 
+
+It runs on Google Colab (Tesla T4 GPU, paid plan) and outputs performance metrics (time in ms) and grid results to CSV files. Graphs are generated per grid size and stored in dedicated 
+
+folders.
+
+------- System Specifications --------
+
+
+Platform: Google Colab (Paid Plan)
+
+GPU: NVIDIA Tesla T4 (40 compute units, 2560 CUDA cores)
+
+CPU: 2-core Intel Xeon (varies, ~2.3 GHz)
+
+Memory: ~12.7 GB RAM
+
+OS: Ubuntu (Colab runtime)
+
+Libraries: CUDA 11.2, OpenCL 1.2, OpenMP
+
+
+
+----- Workgroup Size Selection ------
+
+
+CUDA: Workgroup sizes (4x4, 8x8, 16x16, 32x32) chosen to align with Tesla T4’s 40 compute units. Each unit handles 64 threads, so total threads (40 × 64 = 2560) divided to balance occupancy and memory access. Smaller sizes (e.g., 4x4) suit smaller grids; larger sizes (e.g., 32x32) optimize larger grids.
+
+In my case, generally 16x16 for higher grids and 32x32 for smaller grids work best.
+
+
+OpenCL: Similar workgroup sizes, adjusted for single-device execution (device ID 0) due to Colab’s single-GPU limitation.
+
+
+------ Performance Notes -----------
+
+
+Free Plan: CPU and OpenMP times are similar due to limited CPU cores.
+
+
+Paid Plan: OpenMP is ~50% faster than CPU (e.g., 234.53 ms vs. 715.13 ms for 256x256) due to better core utilization.
+
+
+GPU: CUDA/OpenCL outperform CPU/OpenMP for larger grids (e.g., 105.53–221.27 ms for GPU Local vs. 715.13 ms for CPU at 256x256).
+
